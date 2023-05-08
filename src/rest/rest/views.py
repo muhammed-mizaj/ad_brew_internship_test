@@ -6,15 +6,20 @@ import json, logging, os
 from pymongo import MongoClient
 
 mongo_uri = 'mongodb://' + os.environ["MONGO_HOST"] + ':' + os.environ["MONGO_PORT"]
-db = MongoClient(mongo_uri)['test_db']
+db = MongoClient(mongo_uri)['todo_db']
 
 class TodoListView(APIView):
-
     def get(self, request):
-        # Implement this method - return all todo items from db instance above.
-        return Response({}, status=status.HTTP_200_OK)
-        
-    def post(self, request):
-        # Implement this method - accept a todo item in a mongo collection, persist it using db instance above.
-        return Response({}, status=status.HTTP_200_OK)
+            todos = db.todo.find()
+            todo_list = []
+            for todo in todos:
+                todo['_id'] = str(todo['_id'])
+                todo_list.append(todo)
+            return Response({'todos': todo_list}, status=status.HTTP_200_OK)
 
+
+
+    def post(self, request):
+        data = request.data
+        db.todo.insert_one(data)
+        return Response({}, status=status.HTTP_201_CREATED)
