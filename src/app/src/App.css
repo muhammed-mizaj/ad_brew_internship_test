@@ -1,6 +1,10 @@
 .App {
   text-align: center;
+  background-color: lightblue;
+
 }
+
+
 
 .App-logo {
   height: 40vmin;
@@ -35,4 +39,8 @@
   to {
     transform: rotate(360deg);
   }
+}
+.add-todo-btn {
+  color: white;
+  background-color: green;
 }
