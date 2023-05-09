@@ -6,6 +6,7 @@ const BASE_URL = "http://localhost:8000"
 function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchTodos = async () => {
     try {
@@ -23,13 +24,14 @@ function App() {
 
   const handleNewTodoChange = (event) => {
     setNewTodo(event.target.value);
+    setErrorMessage('');
   };
 
   const handleNewTodoSubmit = async (event) => {
     event.preventDefault();
   
     if (!newTodo) {
-      alert('Todo cant be empty');
+      setErrorMessage('Todo field can not be empty!');
       return;
     }
   
@@ -78,6 +80,9 @@ function App() {
             />
           </div>
           <div style={{ marginTop: '5px' }}>
+            {errorMessage && (
+              <div style={{ color: 'red' }}>{errorMessage}</div>
+            )}
             <button>Add ToDo!</button>
           </div>
         </form>
