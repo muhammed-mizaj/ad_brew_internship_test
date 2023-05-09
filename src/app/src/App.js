@@ -29,14 +29,14 @@ function App() {
 
   const handleNewTodoSubmit = async (event) => {
     event.preventDefault();
-  
+
     if (!newTodo) {
       setErrorMessage('Todo field can not be empty!');
       return;
     }
-  
+
     const todo = { title: newTodo };
-  
+
     try {
       const response = await fetch(BASE_URL+'/todos/', {
         method: 'POST',
@@ -45,11 +45,11 @@ function App() {
         },
         body: JSON.stringify(todo),
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       setNewTodo('');
       fetchTodos(); 
@@ -57,6 +57,29 @@ function App() {
       console.error(error);
     }
   };
+
+  const handleDeleteTodo = async (todo) => {
+    try {
+      const response = await fetch(BASE_URL+`/todos/${todo._id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      fetchTodos();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  const handleEditTodo = (todo) => {
+    setErrorMessage('');
+    fetchTodos();
+  };
+
   
   return (
     <div className="App" >
@@ -64,7 +87,12 @@ function App() {
         <h1>List of TODOs</h1>
         <ul>
           {todos.map((todo) => (
-            <TodoCard key={todo._id} todo={todo} />
+            <TodoCard
+              key={todo._id}
+              todo={todo}
+              onEdit={handleEditTodo}
+              onDelete={handleDeleteTodo}
+            />
           ))}
         </ul>
       </div>
@@ -91,4 +119,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
